@@ -15,17 +15,23 @@ module Compass
             input_png  = ChunkyPNG::Image.from_file(image.file)
             canvas.replace! input_png, image.left, image.top
           end
-        end    
-        
+        end
+
         def save(filename)
+          if @@cache[filename]
+            return
+          end
+
           if canvas.nil?
             construct_sprite
           end
-          
+
           canvas.save(filename,  Compass.configuration.chunky_png_options)
+          @@cache[filename] = true
         end
-        
+
+        @@cache = Hash.new
       end
     end
   end
-end  
+end
